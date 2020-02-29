@@ -26,11 +26,11 @@ namespace yield
                 }
                 if(queue.Count > windowWidth)
                 {
-                    if(queue.Peek() < MaxElement.Last())
+                    if(queue.Peek() > MaxElement.Last())
                     {
-                        queue.Reverse();
-                        queue.Dequeue();
+                        MaxElement.Remove(MaxElement.Last());
                     }
+                    queue.Dequeue();
                 }
                 e.MaxY = MaxElement.Last();
                 yield return e;
