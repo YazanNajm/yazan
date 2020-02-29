@@ -17,7 +17,7 @@ namespace yield
                 queue.Enqueue(value);
                 if(MaxElement.Count >= 2)
                 {
-                    for (var i = 0; i < MaxElement.Count; i++)
+                    for (var i = 0; i < MaxElement.Count - 1; i++)
                     {
                         if (MaxElement.First.Value > MaxElement.First.Next.Value)
                             MaxElement.Remove(MaxElement.First.Next);
@@ -32,7 +32,7 @@ namespace yield
                     }
                     queue.Dequeue();
                 }
-                e.MaxY = MaxElement.Last();
+                e.MaxY = MaxElement.First();
                 yield return e;
             }
         }
