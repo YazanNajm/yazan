@@ -4,61 +4,35 @@ using System.Linq;
 
 namespace yield
 {
-    class Item
-    {
-        public double Value { get; set; }
-        public Item Next { get; set; }
-    }
-
-    class MaxElement
-    {
-        public Item head;
-        public Item tail;
-        public void Push(double value)
-        {
-            var item = new Item { Value = value };
-            if(head == null)
-            {
-                head = tail = item;
-            }
-            else
-            {
-                tail.Next = item;
-                tail = item;
-            }
-        }
-        public double Pop()
-        {
-            if (head == null) throw new InvalidOperationException();
-            var result = head.Value;
-            head = head.Next;
-            if (head == null) tail = null;
-            return result;
-        }
-    }
 	public static class MovingMaxTask
 	{
 		public static IEnumerable<DataPoint> MovingMax(this IEnumerable<DataPoint> data, int windowWidth)
 		{
-            int first = 0;
+            var MaxElement = new LinkedList<double>();
             var queue = new Queue<double>();
-            var result = new MaxElement();
             foreach (var e in data)
             {
                 var value = e.OriginalY;
-                if(first == 0 || value > result.head.Value)
-                {
-                    result.Push(value);
-                }
-
+                MaxElement.AddFirst(value);
                 queue.Enqueue(value);
+                if(MaxElement.Count >= 2)
+                {
+                    for (var i = 0; i < MaxElement.Count; i++)
+                    {
+                        if (MaxElement.First.Value > MaxElement.First.Next.Value)
+                            MaxElement.Remove(MaxElement.First.Next);
+                    }
+
+                }
                 if(queue.Count > windowWidth)
                 {
-                    queue.Dequeue();
-                    result.Pop();
-
+                    if(queue.Peek() < MaxElement.Last())
+                    {
+                        queue.Reverse();
+                        queue.Dequeue();
+                    }
                 }
-                e.MaxY = result.tail.Value;
+                e.MaxY = MaxElement.Last();
                 yield return e;
             }
         }
