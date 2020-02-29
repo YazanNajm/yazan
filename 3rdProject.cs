@@ -15,7 +15,15 @@ namespace yield
                 var value = e.OriginalY;
                 MaxElement.AddFirst(value);
                 queue.Enqueue(value);
-                if(MaxElement.Count >= 2)
+                if (queue.Count > windowWidth)
+                {
+                    if (queue.Peek() >= MaxElement.Last())
+                    {
+                        MaxElement.Remove(MaxElement.Last());
+                    }
+                    queue.Dequeue();
+                }
+                if (MaxElement.Count >= 2)
                 {
                     for (var i = 0; i < MaxElement.Count - 1; i++)
                     {
@@ -24,14 +32,7 @@ namespace yield
                     }
 
                 }
-                if(queue.Count > windowWidth)
-                {
-                    if(queue.Peek() > MaxElement.Last())
-                    {
-                        MaxElement.Remove(MaxElement.Last());
-                    }
-                    queue.Dequeue();
-                }
+                
                 e.MaxY = MaxElement.First();
                 yield return e;
             }
